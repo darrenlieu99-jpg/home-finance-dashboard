@@ -1,0 +1,2277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Darren & Scarlett — Home Finance</title>
+<style>
+/* ============================================================
+   RESET & VARIABLES
+============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --sw: 224px;
+  --bg: #f2f1ed;
+  --sidebar: #0c1220;
+  --sh: rgba(255,255,255,0.06);
+  --card: #ffffff;
+  --primary: #1a3556;
+  --accent: #c8922a;
+  --accent-bg: #fdf3e0;
+  --ok: #1a6640;
+  --ok-bg: #eaf5ee;
+  --bad: #9c1c1c;
+  --bad-bg: #fdf0f0;
+  --warn: #855a00;
+  --warn-bg: #fffbeb;
+  --text: #181826;
+  --muted: #6b7280;
+  --border: #e4e6ea;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --r: 10px;
+  --r-sm: 6px;
+  --serif: Georgia, 'Times New Roman', serif;
+  --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+/* ============================================================
+   SIDEBAR
+============================================================ */
+.sidebar {
+  width: var(--sw);
+  background: var(--sidebar);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.sb-logo {
+  padding: 22px 18px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.sb-logo h1 {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: #fff;
+  font-weight: normal;
+  letter-spacing: 0.2px;
+}
+
+.sb-logo p {
+  font-size: 11px;
+  color: rgba(255,255,255,0.38);
+  margin-top: 2px;
+}
+
+.sb-nav { padding: 10px 0; flex: 1; }
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 18px;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  font-size: 13px;
+  border-left: 3px solid transparent;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.nav-link:hover { background: var(--sh); color: rgba(255,255,255,0.9); }
+
+.nav-link.active {
+  color: #fff;
+  border-left-color: var(--accent);
+  background: rgba(200,146,42,0.1);
+}
+
+.nav-icon { font-size: 15px; }
+
+.sb-footer {
+  padding: 14px 18px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.sb-footer p {
+  font-size: 10px;
+  color: rgba(255,255,255,0.25);
+  line-height: 1.6;
+}
+
+/* ============================================================
+   MAIN
+============================================================ */
+.main { margin-left: var(--sw); flex: 1; display: flex; flex-direction: column; }
+
+.topbar {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 13px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: var(--shadow);
+}
+
+.topbar-title { font-family: var(--serif); font-size: 18px; color: var(--primary); font-weight: normal; }
+
+.topbar-actions { display: flex; gap: 8px; align-items: center; }
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.hamburger span { width: 20px; height: 2px; background: var(--text); border-radius: 2px; }
+
+/* ============================================================
+   SECTIONS
+============================================================ */
+.section { padding: 26px 28px; display: none; }
+.section.active { display: block; }
+
+.sec-head { margin-bottom: 20px; }
+.sec-title { font-family: var(--serif); font-size: 22px; color: var(--primary); font-weight: normal; margin-bottom: 3px; }
+.sec-sub { font-size: 13px; color: var(--muted); }
+
+/* ============================================================
+   GRID
+============================================================ */
+.grid { display: grid; gap: 16px; }
+.g2 { grid-template-columns: 1fr 1fr; }
+.g3 { grid-template-columns: 1fr 1fr 1fr; }
+.g4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+/* ============================================================
+   CARDS
+============================================================ */
+.card {
+  background: var(--card);
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.card-hdr {
+  padding: 15px 18px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-title { font-family: var(--serif); font-size: 14px; color: var(--primary); font-weight: normal; }
+
+.card-body { padding: 16px 18px; }
+
+/* Stat cards */
+.stat {
+  background: var(--card);
+  border-radius: var(--r);
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.stat-lbl {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+  color: var(--muted);
+}
+
+.stat-val {
+  font-family: var(--serif);
+  font-size: 26px;
+  color: var(--primary);
+  margin-top: 5px;
+  line-height: 1;
+}
+
+.stat-note { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+.c-ok { color: var(--ok) !important; }
+.c-bad { color: var(--bad) !important; }
+.c-accent { color: var(--accent) !important; }
+.c-muted { color: var(--muted) !important; }
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  font-family: var(--sans);
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: #152c48; }
+.btn-accent { background: var(--accent); color: #fff; }
+.btn-accent:hover { background: #b57d1e; }
+.btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--bg); color: var(--text); }
+.btn-danger { background: transparent; color: var(--bad); border: 1px solid #fecaca; }
+.btn-danger:hover { background: var(--bad-bg); }
+.btn-sm { padding: 5px 10px; font-size: 12px; }
+.btn-xs { padding: 3px 8px; font-size: 11px; }
+
+/* ============================================================
+   BADGES
+============================================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.b-bought    { background: #dcfce7; color: #166534; }
+.b-pending   { background: #fef3c7; color: #92400e; }
+.b-planned   { background: #e0e7ff; color: #3730a3; }
+.b-notneeded { background: #f1f5f9; color: #64748b; }
+.b-essential { background: #fee2e2; color: #991b1b; }
+.b-optional  { background: #ecfdf5; color: #065f46; }
+.b-ok        { background: var(--ok-bg); color: var(--ok); }
+.b-bad       { background: var(--bad-bg); color: var(--bad); }
+.b-accent    { background: var(--accent-bg); color: var(--accent); }
+
+/* ============================================================
+   PROGRESS BAR
+============================================================ */
+.pbar-wrap { background: #e9eaed; border-radius: 20px; height: 8px; overflow: hidden; }
+.pbar { height: 100%; border-radius: 20px; transition: width 0.5s ease; }
+.pb-green { background: var(--ok); }
+.pb-gold  { background: var(--accent); }
+.pb-red   { background: var(--bad); }
+.pb-blue  { background: var(--primary); }
+
+/* ============================================================
+   TABLES
+============================================================ */
+.tbl-wrap { overflow-x: auto; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+
+thead th {
+  background: #f7f8fa;
+  padding: 9px 11px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--muted);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+
+thead th.r { text-align: right; }
+
+tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+tbody tr:hover { background: #fafafa; }
+tbody tr:last-child { border-bottom: none; }
+
+td { padding: 9px 11px; vertical-align: middle; }
+td.r { text-align: right; font-family: var(--mono); font-size: 12px; }
+
+.row-section td {
+  background: var(--primary);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 6px 11px;
+}
+
+.row-sub td {
+  background: #f0f4f8;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--primary);
+  border-top: 1px solid #dce1ea;
+}
+
+.row-total td {
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.row-net td {
+  background: #0e2540;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  font-family: var(--serif);
+}
+
+.row-over { background: #fff6f6 !important; }
+.row-over td { color: var(--bad); }
+
+/* Inline editing */
+.cell-edit {
+  background: transparent;
+  border: none;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+  width: 80px;
+  text-align: right;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.cell-edit:focus {
+  outline: none;
+  background: #fffbf0;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.cell-edit-wide {
+  background: transparent;
+  border: none;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text);
+  width: 100%;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.cell-edit-wide:focus {
+  outline: none;
+  background: #fffbf0;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+select.cell-select {
+  background: transparent;
+  border: none;
+  font-size: 12px;
+  color: var(--text);
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+select.cell-select:focus {
+  outline: none;
+  background: #fffbf0;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* ============================================================
+   FILTERS
+============================================================ */
+.filters {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 14px 0 16px;
+}
+
+.flt {
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  font-size: 12px;
+  background: white;
+  color: var(--text);
+  cursor: pointer;
+  font-family: var(--sans);
+}
+
+.flt:focus { outline: none; border-color: var(--accent); }
+
+.srch {
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  background: white;
+  color: var(--text);
+  width: 180px;
+  font-family: var(--sans);
+}
+
+.srch:focus { outline: none; border-color: var(--accent); }
+
+/* ============================================================
+   SUMMARY BAR (moving in)
+============================================================ */
+.sum-bar {
+  background: var(--primary);
+  border-radius: var(--r);
+  padding: 16px 20px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.sum-item { display: flex; flex-direction: column; }
+.sum-lbl { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,0.45); }
+.sum-val { font-family: var(--serif); font-size: 18px; color: #fff; }
+.sum-div { width: 1px; height: 36px; background: rgba(255,255,255,0.12); }
+
+/* ============================================================
+   MONTH TABS (budget)
+============================================================ */
+.month-tabs {
+  display: flex;
+  overflow-x: auto;
+  gap: 2px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--border);
+  scrollbar-width: none;
+}
+
+.month-tabs::-webkit-scrollbar { display: none; }
+
+.m-tab {
+  padding: 8px 13px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.m-tab:hover { color: var(--text); }
+
+.m-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--accent);
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(10,15,30,0.55);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.overlay.open { display: flex; }
+
+.modal {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  width: 100%;
+  max-width: 520px;
+  max-height: 92vh;
+  overflow-y: auto;
+}
+
+.modal-hdr {
+  padding: 18px 22px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title { font-family: var(--serif); font-size: 17px; color: var(--primary); font-weight: normal; }
+
+.modal-body { padding: 18px 22px; }
+
+.modal-foot {
+  padding: 14px 22px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* ============================================================
+   FORM
+============================================================ */
+.fg { margin-bottom: 13px; }
+.flbl { display: block; font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
+.finp, .fsel, .ftxt {
+  width: 100%;
+  padding: 8px 11px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  font-family: var(--sans);
+  color: var(--text);
+  background: white;
+  transition: border-color 0.15s;
+}
+.finp:focus, .fsel:focus, .ftxt:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(200,146,42,0.15);
+}
+.ftxt { resize: vertical; min-height: 65px; }
+.fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* ============================================================
+   SAVINGS
+============================================================ */
+.bal-card {
+  background: var(--card);
+  border-radius: var(--r);
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.bal-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); }
+
+.bal-input {
+  font-family: var(--serif);
+  font-size: 26px;
+  color: var(--primary);
+  border: none;
+  border-bottom: 2px solid var(--border);
+  width: 100%;
+  padding: 3px 0;
+  background: transparent;
+  margin-top: 4px;
+}
+
+.bal-input:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+}
+
+/* ============================================================
+   ALERT
+============================================================ */
+.alert {
+  padding: 11px 14px;
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.alert-warn { background: var(--warn-bg); color: var(--warn); border-left: 3px solid #f59e0b; }
+.alert-ok   { background: var(--ok-bg); color: var(--ok); border-left: 3px solid #10b981; }
+.alert-bad  { background: var(--bad-bg); color: var(--bad); border-left: 3px solid #ef4444; }
+
+/* ============================================================
+   SIMPLE CSS BAR CHART
+============================================================ */
+.chart-area {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 120px;
+  padding: 0 4px;
+  margin-top: 8px;
+}
+
+.chart-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+}
+
+.chart-bars {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.chart-b {
+  flex: 1;
+  border-radius: 3px 3px 0 0;
+  min-height: 2px;
+  transition: height 0.4s;
+}
+
+.chart-lbl { font-size: 9px; color: var(--muted); font-weight: 600; text-align: center; }
+
+/* ============================================================
+   TOAST
+============================================================ */
+.toast {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  background: var(--primary);
+  color: white;
+  padding: 11px 16px;
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  z-index: 9999;
+}
+
+.toast.show { opacity: 1; }
+
+/* ============================================================
+   UTILITIES
+============================================================ */
+.flex { display: flex; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.flex-center { display: flex; align-items: center; }
+.gap-8 { gap: 8px; }
+.gap-12 { gap: 12px; }
+.gap-16 { gap: 16px; }
+.mb-8  { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-20 { margin-bottom: 20px; }
+.mt-8  { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-20 { margin-top: 20px; }
+.w100 { width: 100%; }
+.txt-r { text-align: right; }
+.txt-c { text-align: center; }
+.fmono { font-family: var(--mono); }
+.fserif { font-family: var(--serif); }
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 800px) {
+  .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .topbar { padding: 11px 16px; }
+  .section { padding: 14px 16px; }
+  .g4 { grid-template-columns: 1fr 1fr; }
+  .g3 { grid-template-columns: 1fr; }
+  .g2 { grid-template-columns: 1fr; }
+  .hamburger { display: flex !important; }
+  .mob-hide { display: none !important; }
+}
+
+.mob-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 99;
+  display: none;
+}
+
+.mob-overlay.open { display: block; }
+</style>
+</head>
+<body>
+
+<!-- Mobile overlay -->
+<div class="mob-overlay" id="mobOverlay" onclick="closeSidebar()"></div>
+
+<!-- ============================================================
+     SIDEBAR
+============================================================ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo">
+    <h1>🏠 Darren & Scarlett</h1>
+    <p>Home Finance Dashboard</p>
+  </div>
+  <nav class="sb-nav">
+    <div class="nav-link active" onclick="showTab('dashboard')">
+      <span class="nav-icon">📊</span> Dashboard
+    </div>
+    <div class="nav-link" onclick="showTab('moving')">
+      <span class="nav-icon">📦</span> Moving In
+    </div>
+    <div class="nav-link" onclick="showTab('budget')">
+      <span class="nav-icon">💰</span> Annual Budget
+    </div>
+    <div class="nav-link" onclick="showTab('savings')">
+      <span class="nav-icon">🏦</span> Savings Tracker
+    </div>
+  </nav>
+  <div class="sb-footer">
+    <p>3/17 Lawson Parade<br>Heidelberg Heights VIC 3081<br>Settlement: 18 May 2026</p>
+  </div>
+</aside>
+
+<!-- ============================================================
+     MAIN
+============================================================ -->
+<main class="main">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="flex-center gap-12">
+      <div class="hamburger" onclick="openSidebar()">
+        <span></span><span></span><span></span>
+      </div>
+      <span class="topbar-title" id="topbarTitle">Dashboard</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-ghost btn-sm" onclick="importData()" title="Import JSON">⬆ Import</button>
+      <button class="btn btn-ghost btn-sm" onclick="exportData()" title="Export JSON">⬇ Export</button>
+      <button class="btn btn-accent btn-sm" onclick="saveData()">💾 Save</button>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       DASHBOARD
+  ============================================================ -->
+  <section class="section active" id="tab-dashboard">
+    <div class="sec-head">
+      <div class="sec-title">Overview</div>
+      <div class="sec-sub">Everything at a glance — Darren & Scarlett, Heidelberg Heights</div>
+    </div>
+
+    <!-- Stat cards -->
+    <div class="grid g4 mb-20" id="dash-stats"></div>
+
+    <!-- Two-column layout -->
+    <div class="grid g2 mb-20">
+      <!-- Moving In overview -->
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-title">Moving In — By Room</span>
+          <span class="badge b-accent" id="dash-items-remaining">— items to buy</span>
+        </div>
+        <div class="card-body" id="dash-moving-chart"></div>
+      </div>
+
+      <!-- Budget overview -->
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-title">Annual Budget vs Actuals</span>
+        </div>
+        <div class="card-body" id="dash-budget-overview"></div>
+      </div>
+    </div>
+
+    <!-- Alerts + lists -->
+    <div class="grid g2">
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-title">🛒 Still To Buy (Essential)</span>
+        </div>
+        <div class="card-body" id="dash-to-buy"></div>
+      </div>
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-title">⚠️ Budget Alerts</span>
+        </div>
+        <div class="card-body" id="dash-alerts"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       MOVING IN
+  ============================================================ -->
+  <section class="section" id="tab-moving">
+    <div class="sec-head">
+      <div class="sec-title">Moving In</div>
+      <div class="sec-sub">Furniture, appliances & household items — 3/17 Lawson Parade</div>
+    </div>
+
+    <!-- Summary bar -->
+    <div class="sum-bar" id="moving-sumbar"></div>
+
+    <!-- Cash balance row -->
+    <div class="flex-between mb-16">
+      <div class="flex-center gap-12">
+        <div class="filters">
+          <input class="srch" id="mov-search" placeholder="🔍 Search items…" oninput="renderMoving()">
+          <select class="flt" id="mov-cat" onchange="renderMoving()">
+            <option value="">All Rooms</option>
+          </select>
+          <select class="flt" id="mov-status" onchange="renderMoving()">
+            <option value="">All Statuses</option>
+            <option value="pending">Pending</option>
+            <option value="bought">Bought</option>
+            <option value="planned">Planned</option>
+            <option value="not-needed">Not Needed</option>
+          </select>
+          <select class="flt" id="mov-priority" onchange="renderMoving()">
+            <option value="">All Priorities</option>
+            <option value="essential">Essential</option>
+            <option value="optional">Optional</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-accent" onclick="openAddItem()">+ Add Item</button>
+    </div>
+
+    <!-- Cash balance editor -->
+    <div class="flex-between mb-12" style="background:white;border:1px solid var(--border);border-radius:var(--r);padding:12px 18px;">
+      <span style="font-size:13px;color:var(--muted);">💵 Cash balance after settlement & May payday</span>
+      <div class="flex-center gap-8">
+        <span style="font-size:13px;color:var(--muted);">$</span>
+        <input type="number" id="cash-balance" class="cell-edit" style="width:120px;font-size:15px;font-family:var(--serif);color:var(--primary);border-bottom:2px solid var(--border);"
+          oninput="state.movingCash=parseFloat(this.value)||0;autoSave();renderMovingSumBar()" step="0.01">
+      </div>
+    </div>
+
+    <!-- Items table -->
+    <div class="card tbl-wrap">
+      <table id="moving-table">
+        <thead>
+          <tr>
+            <th>Room / Category</th>
+            <th>Item</th>
+            <th>Brand / Model</th>
+            <th class="r">Est Cost</th>
+            <th class="r">Actual Cost</th>
+            <th>Status</th>
+            <th>Priority</th>
+            <th>Purchase Date</th>
+            <th class="mob-hide">Notes</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="moving-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ANNUAL BUDGET
+  ============================================================ -->
+  <section class="section" id="tab-budget">
+    <div class="sec-head">
+      <div class="sec-title">Annual Budget 2026–27</div>
+      <div class="sec-sub">May 2026 – May 2027  ·  Budget vs Actuals  ·  Click any Actual cell to edit</div>
+    </div>
+
+    <!-- Annual summary stats -->
+    <div class="grid g4 mb-20" id="budget-stats"></div>
+
+    <!-- Month tabs -->
+    <div class="month-tabs" id="monthTabs"></div>
+
+    <!-- Budget table -->
+    <div class="card mb-20">
+      <div class="card-hdr">
+        <span class="card-title" id="budgetTableTitle">Loading…</span>
+        <div class="flex-center gap-8">
+          <button class="btn btn-ghost btn-sm" onclick="openAddCategory()">+ Category</button>
+        </div>
+      </div>
+      <div class="card-body" style="padding:0;">
+        <div class="tbl-wrap">
+          <table id="budget-table">
+            <thead>
+              <tr>
+                <th style="min-width:200px">Category</th>
+                <th class="r">Budget</th>
+                <th class="r">Actual</th>
+                <th class="r">Variance</th>
+                <th class="r mob-hide">Annual Budget</th>
+              </tr>
+            </thead>
+            <tbody id="budget-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Budget assumptions note -->
+    <div class="card">
+      <div class="card-hdr"><span class="card-title">⚙️ Budget Assumptions</span></div>
+      <div class="card-body">
+        <div class="grid g2 gap-12">
+          <div>
+            <p style="font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Income</p>
+            <p style="font-size:13px;">Darren: <strong>$5,293.17/mo</strong> (Gross ~$83k p.a.)</p>
+            <p style="font-size:13px;">Scarlett: <strong>$5,483.83/mo</strong> (Gross ~$92k p.a.)</p>
+          </div>
+          <div>
+            <p style="font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Housing</p>
+            <p style="font-size:13px;">Mortgage: <strong>$4,372.03/mo</strong> ($730k @ 5.99% / 30yr)</p>
+            <p style="font-size:13px;">Personal allowance: <strong>$200/fn each</strong> ($433.33/mo)</p>
+          </div>
+          <div>
+            <p style="font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Variable Notes</p>
+            <p style="font-size:13px;">Transport: Petrol $108 + Rego $78 + Maint $25 + PT $223</p>
+            <p style="font-size:13px;">Skiing: Jul + Aug $1,000 each &nbsp;·&nbsp; Gifts: Dec $500</p>
+          </div>
+          <div>
+            <p style="font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Notes</p>
+            <p style="font-size:13px;">Mortgage debits 1st of each month</p>
+            <p style="font-size:13px;">Enter actuals each month as they come in</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SAVINGS TRACKER
+  ============================================================ -->
+  <section class="section" id="tab-savings">
+    <div class="sec-head">
+      <div class="sec-title">Savings Tracker</div>
+      <div class="sec-sub">23 Apr – 21 May 2026  ·  Pre-settlement weekly tracker</div>
+    </div>
+
+    <!-- Balance cards -->
+    <div class="grid g4 mb-20">
+      <div class="bal-card">
+        <div class="bal-lbl">💜 Darren Balance</div>
+        <input class="bal-input" type="number" id="sav-darren" step="0.01"
+          oninput="state.savings.darren=parseFloat(this.value)||0;autoSave();renderSavings()">
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;">Update when balance changes</div>
+      </div>
+      <div class="bal-card">
+        <div class="bal-lbl">💙 Scarlett Balance</div>
+        <input class="bal-input" type="number" id="sav-scarlett" step="0.01"
+          oninput="state.savings.scarlett=parseFloat(this.value)||0;autoSave();renderSavings()">
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;">Update when balance changes</div>
+      </div>
+      <div class="bal-card">
+        <div class="bal-lbl">🤝 Combined Balance</div>
+        <div class="bal-input" id="sav-combined" style="border:none;cursor:default;"></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;">Darren + Scarlett</div>
+      </div>
+      <div class="bal-card">
+        <div class="bal-lbl">🏠 Settlement Required</div>
+        <input class="bal-input" type="number" id="sav-settlement" step="0.01"
+          oninput="state.savings.settlement=parseFloat(this.value)||0;autoSave();renderSavings()">
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;">18 May 2026</div>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="card mb-20">
+      <div class="card-body" id="sav-progress"></div>
+    </div>
+
+    <!-- Settlement breakdown note -->
+    <div class="alert alert-warn mb-20">
+      <strong>Settlement breakdown:</strong> $162,996 total − $1k holding − $83,500 deposit = <strong>$78,496 remaining</strong> due 18 May. Edit the "Settlement Required" field above if this changes.
+    </div>
+
+    <!-- Weekly tracker -->
+    <div class="card mb-16">
+      <div class="card-hdr">
+        <span class="card-title">Weekly Tracker</span>
+        <button class="btn btn-accent btn-sm" onclick="addSavingsRow()">+ Add Week</button>
+      </div>
+      <div class="card-body" style="padding:0;">
+        <div class="tbl-wrap">
+          <table id="savings-table">
+            <thead>
+              <tr>
+                <th>Week</th>
+                <th>Dates</th>
+                <th>Event</th>
+                <th class="r">Darren In ($)</th>
+                <th class="r">Scarlett In ($)</th>
+                <th class="r">Total In</th>
+                <th>Expense Item</th>
+                <th class="r">Cost Out ($)</th>
+                <th class="r">Running Total</th>
+                <th class="r">Surplus vs $78,496</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="savings-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final balance callout -->
+    <div class="grid g2">
+      <div class="card">
+        <div class="card-body txt-c">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.7px;color:var(--muted);font-weight:600;">Balance After Settlement (before 21 May payday)</div>
+          <div id="sav-post-settle" style="font-family:var(--serif);font-size:30px;color:var(--primary);margin-top:6px;"></div>
+        </div>
+      </div>
+      <div class="card" style="border:2px solid var(--accent);">
+        <div class="card-body txt-c">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.7px;color:var(--muted);font-weight:600;">Final Balance After 21 May Payday</div>
+          <div id="sav-final" style="font-family:var(--serif);font-size:30px;color:var(--accent);margin-top:6px;"></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px;">Available for furniture & moving costs</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     MODALS
+============================================================ -->
+<!-- Add/Edit Item -->
+<div class="overlay" id="itemModal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <span class="modal-title" id="itemModalTitle">Add Item</span>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('itemModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="item-id">
+      <div class="fgrid">
+        <div class="fg">
+          <label class="flbl">Room / Category</label>
+          <select class="fsel" id="item-cat">
+            <option>Appliances</option>
+            <option>Living room</option>
+            <option>Bedroom 1</option>
+            <option>Bedroom 2</option>
+            <option>Kitchen</option>
+            <option>Bathroom</option>
+            <option>Outdoor / Other</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="flbl">Item Name</label>
+          <input class="finp" id="item-name" placeholder="e.g. Coffee table">
+        </div>
+        <div class="fg">
+          <label class="flbl">Brand</label>
+          <input class="finp" id="item-brand" placeholder="e.g. Castlery">
+        </div>
+        <div class="fg">
+          <label class="flbl">Model</label>
+          <input class="finp" id="item-model" placeholder="e.g. Hamilton 3 Seater">
+        </div>
+        <div class="fg">
+          <label class="flbl">Estimated Cost ($)</label>
+          <input class="finp" id="item-est" type="number" step="0.01" placeholder="0.00">
+        </div>
+        <div class="fg">
+          <label class="flbl">Actual Cost ($)</label>
+          <input class="finp" id="item-actual" type="number" step="0.01" placeholder="0.00">
+        </div>
+        <div class="fg">
+          <label class="flbl">Status</label>
+          <select class="fsel" id="item-status">
+            <option value="pending">Pending</option>
+            <option value="bought">Bought</option>
+            <option value="planned">Planned</option>
+            <option value="not-needed">Not Needed</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="flbl">Priority</label>
+          <select class="fsel" id="item-priority">
+            <option value="essential">Essential</option>
+            <option value="optional">Optional</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="flbl">Purchase Date</label>
+          <input class="finp" id="item-date" type="date">
+        </div>
+        <div class="fg">
+          <label class="flbl">Link / URL</label>
+          <input class="finp" id="item-link" type="url" placeholder="https://…">
+        </div>
+      </div>
+      <div class="fg">
+        <label class="flbl">Notes</label>
+        <textarea class="ftxt" id="item-notes" placeholder="Any extra notes…"></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('itemModal')">Cancel</button>
+      <button class="btn btn-accent" onclick="saveItem()">Save Item</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Category (budget) -->
+<div class="overlay" id="catModal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <span class="modal-title">Add Budget Category</span>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('catModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fg">
+        <label class="flbl">Category Name</label>
+        <input class="finp" id="cat-name" placeholder="e.g. Pet expenses">
+      </div>
+      <div class="fgrid">
+        <div class="fg">
+          <label class="flbl">Section</label>
+          <select class="fsel" id="cat-section">
+            <option value="income">Income</option>
+            <option value="housing">Housing & Fixed</option>
+            <option value="personal">Personal Allowances</option>
+            <option value="variable" selected>Variable Expenses</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="flbl">Default Monthly Budget ($)</label>
+          <input class="finp" id="cat-amount" type="number" step="0.01" placeholder="0.00">
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('catModal')">Cancel</button>
+      <button class="btn btn-accent" onclick="saveCategory()">Add Category</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden import input -->
+<input type="file" id="importFile" accept=".json" style="display:none" onchange="handleImport(event)">
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+<script>
+'use strict';
+
+// ============================================================
+// MONTHS
+// ============================================================
+const MONTHS = ['May 26','Jun 26','Jul 26','Aug 26','Sep 26','Oct 26','Nov 26','Dec 26','Jan 27','Feb 27','Mar 27','Apr 27','May 27'];
+
+// ============================================================
+// DEFAULT DATA — sourced from spreadsheets
+// ============================================================
+
+/**
+ * Moving In items from "Furniture & Appliances" sheet.
+ * status: bought | pending | planned | not-needed
+ * priority: essential | optional
+ * Derived from "Already own?" and "Optional?" columns.
+ */
+const DEFAULT_MOVING = [
+  // APPLIANCES
+  { id:1,  cat:'Appliances',      item:'Washing machine',           brand:'Westinghouse', model:'WWt6084J5WA 6kg Top Load',                    est:749,   actual:566,   status:'bought',   priority:'essential', date:'',        notes:'My Mother to purchase / Vincent discount',            link:'https://www.jbhifi.com.au/products/westinghouse-wwt6084j5wa-6kg-top-load-washing-machine' },
+  { id:2,  cat:'Appliances',      item:'Dryer',                     brand:'',             model:'',                                             est:null,  actual:700,   status:'planned',  priority:'optional',  date:'',        notes:'Mum says we need one in winter',                      link:'' },
+  { id:3,  cat:'Appliances',      item:'Fridge / Freezer',          brand:'Samsung',      model:'SRF7500BB 648L French Door Fridge (Black)',     est:3799,  actual:2904.5,status:'pending',  priority:'essential', date:'',        notes:'Top of range, beverage center & ice / Vincent disc',  link:'https://www.jbhifi.com.au/products/samsung-srf7500bb-648l-french-door-fridge-black' },
+  { id:4,  cat:'Appliances',      item:'Dishwasher',                brand:'Bosch',        model:'Bosch Dishwasher with cutlery drawer',          est:null,  actual:1600,  status:'bought',   priority:'optional',  date:'',        notes:'Comes included in property',                          link:'' },
+  { id:5,  cat:'Appliances',      item:'Microwave',                 brand:'Samsung',      model:'MS32DG4504AG 32L Microwave',                   est:199,   actual:186,   status:'pending',  priority:'essential', date:'',        notes:'Vincent Discount',                                    link:'https://www.jbhifi.com.au/products/samsung-ms32dg4504ag-32l-microwave' },
+  { id:6,  cat:'Appliances',      item:'Vacuum cleaner',            brand:'Shark',        model:'Shark Cordless PowerDetect Clean & Empty',      est:null,  actual:799,   status:'planned',  priority:'optional',  date:'',        notes:'Vincent Discount',                                    link:'' },
+  { id:7,  cat:'Appliances',      item:'Air fryer / toaster oven',  brand:'Ninja',        model:'Ninja Air Fryer Max',                          est:null,  actual:199,   status:'bought',   priority:'optional',  date:'',        notes:'Already own — Scarlett take from home',               link:'' },
+  { id:8,  cat:'Appliances',      item:'Toaster set',               brand:'BTS',          model:'BTS BT21 Shooky TOASTER',                      est:null,  actual:null,  status:'bought',   priority:'essential', date:'',        notes:'Scarlett take from home',                             link:'https://kheartshop.com/products/line-x-bt21-baby-toaster' },
+  { id:9,  cat:'Appliances',      item:'Kettle',                    brand:'Brewista',     model:'Brewista',                                     est:null,  actual:189,   status:'bought',   priority:'essential', date:'',        notes:'Scarlett take from home',                             link:'' },
+  { id:10, cat:'Appliances',      item:'Iron & board',              brand:'Ikea',         model:'DAENKA Ironing Board',                         est:null,  actual:60,    status:'pending',  priority:'essential', date:'',        notes:'Cmon its just an ironing board scarlett PLS',         link:'https://www.ikea.com/au/en/p/daenka-ironing-board-00471613/' },
+  // LIVING ROOM
+  { id:11, cat:'Living room',     item:'Couch / sofa (3 seater)',   brand:'Castlery',     model:'Hamilton 3 Seater Sofa Boucle, Ginger',        est:null,  actual:2199,  status:'pending',  priority:'essential', date:'',        notes:'',                                                    link:'https://www.castlery.com/au/products/hamilton-3-seater-sofa' },
+  { id:12, cat:'Living room',     item:'Storage ottoman',           brand:'Castlery',     model:'Hamilton Storage Ottoman Boucle, Ginger',      est:null,  actual:659,   status:'pending',  priority:'essential', date:'',        notes:'',                                                    link:'https://www.castlery.com/au/products/hamilton-storage-ottoman' },
+  { id:13, cat:'Living room',     item:'Dining set',                brand:'Castlery',     model:'Sloane Dining Set 180cm',                      est:null,  actual:2635,  status:'pending',  priority:'essential', date:'',        notes:'',                                                    link:'https://www.castlery.com/au/products/sloane-dining-set-for-6-8' },
+  { id:14, cat:'Living room',     item:'Coffee table',              brand:'Castlery',     model:'Hugg Nesting Square Coffee Table',              est:null,  actual:1349,  status:'planned',  priority:'optional',  date:'',        notes:'',                                                    link:'https://www.castlery.com/au/products/hugg-nesting-square-coffee-table' },
+  { id:15, cat:'Living room',     item:'TV',                        brand:'Samsung',      model:'Samsung The Frame',                            est:null,  actual:2000,  status:'bought',   priority:'essential', date:'',        notes:'',                                                    link:'' },
+  { id:16, cat:'Living room',     item:'TV unit / stand',           brand:'Castlery',     model:'Casa TV Unit 2.0m',                            est:null,  actual:1399,  status:'planned',  priority:'optional',  date:'',        notes:'Can defs do cheaper — Ikea would work (Darren)',      link:'https://www.castlery.com/au/products/casa-tv-unit' },
+  { id:17, cat:'Living room',     item:'Floor lamp',                brand:'',             model:'',                                             est:null,  actual:80,    status:'planned',  priority:'optional',  date:'',        notes:'',                                                    link:'' },
+  { id:18, cat:'Living room',     item:'Sheer blinds & railing',    brand:'',             model:'',                                             est:null,  actual:400,   status:'pending',  priority:'essential', date:'',        notes:'',                                                    link:'' },
+  { id:19, cat:'Living room',     item:'Rug',                       brand:'',             model:'',                                             est:null,  actual:200,   status:'planned',  priority:'optional',  date:'',        notes:'',                                                    link:'' },
+  // BEDROOM 1
+  { id:20, cat:'Bedroom 1',       item:'Bed frame (queen)',          brand:'Castlery',     model:'Joseph Bed, Walnut',                           est:null,  actual:1499,  status:'pending',  priority:'essential', date:'',        notes:'',                                                    link:'https://www.castlery.com/au/products/joseph-bed-walnut' },
+  { id:21, cat:'Bedroom 1',       item:'Mattress (queen)',           brand:'Koala',        model:'Koala Medium-Firm',                            est:null,  actual:1250,  status:'bought',   priority:'essential', date:'',        notes:'Medium to medium-firm',                               link:'' },
+  { id:22, cat:'Bedroom 1',       item:'Bedside tables x2',         brand:'',             model:'',                                             est:null,  actual:200,   status:'planned',  priority:'optional',  date:'',        notes:'',                                                    link:'' },
+  { id:23, cat:'Bedroom 1',       item:'Linen set',                 brand:'',             model:'',                                             est:null,  actual:150,   status:'bought',   priority:'essential', date:'',        notes:'',                                                    link:'' },
+  { id:24, cat:'Bedroom 1',       item:'Quilt / doona + covers',    brand:'',             model:'',                                             est:null,  actual:200,   status:'bought',   priority:'essential', date:'',        notes:'',                                                    link:'' },
+  { id:25, cat:'Bedroom 1',       item:'Pillows x2',                brand:'',             model:'',                                             est:null,  actual:80,    status:'bought',   priority:'essential', date:'',        notes:'',                                                    link:'' },
+  // KITCHEN
+  { id:26, cat:'Kitchen',         item:'Pots & pans set',           brand:'Various',      model:'',                                             est:null,  actual:150,   status:'bought',   priority:'essential', date:'',        notes:'Scarlett take from home',                             link:'' },
+  { id:27, cat:'Kitchen',         item:'Knife set',                 brand:'Various',      model:'',                                             est:null,  actual:60,    status:'bought',   priority:'essential', date:'',        notes:'Scarlett take from home',                             link:'' },
+  { id:28, cat:'Kitchen',         item:'Crockery & cutlery',        brand:'Various',      model:'',                                             est:null,  actual:80,    status:'bought',   priority:'essential', date:'',        notes:'Scarlett take from home',                             link:'' },
+  { id:29, cat:'Kitchen',         item:'Glasses & mugs',            brand:'Various',      model:'',                                             est:null,  actual:50,    status:'bought',   priority:'essential', date:'',        notes:'Scarlett take from home',                             link:'' },
+  { id:30, cat:'Kitchen',         item:'Chopping boards',           brand:'Various',      model:'',                                             est:null,  actual:30,    status:'bought',   priority:'essential', date:'',        notes:'Scarlett take from home',                             link:'' },
+  // BATHROOM
+  { id:31, cat:'Bathroom',        item:'Towels x4',                 brand:'Various',      model:'',                                             est:null,  actual:80,    status:'bought',   priority:'essential', date:'',        notes:'Scarlett take from home',                             link:'' },
+  { id:32, cat:'Bathroom',        item:'Bath mat',                  brand:'',             model:'',                                             est:null,  actual:30,    status:'bought',   priority:'essential', date:'',        notes:'',                                                    link:'' },
+  { id:33, cat:'Bathroom',        item:'Shower caddy / storage',    brand:'',             model:'',                                             est:null,  actual:40,    status:'bought',   priority:'optional',  date:'',        notes:'',                                                    link:'' },
+  // OUTDOOR
+  { id:34, cat:'Outdoor / Other', item:'Clothes airer / rack',      brand:'',             model:'',                                             est:null,  actual:40,    status:'bought',   priority:'essential', date:'',        notes:'',                                                    link:'' },
+];
+
+/**
+ * Budget categories.
+ * defaultBudget = monthly budget for all months unless overridden in monthOverrides.
+ * sections: income | housing | personal | variable
+ */
+const DEFAULT_CATEGORIES = [
+  // INCOME
+  { id:'darren-income',   name:"Darren (post-tax)",              section:'income',   defaultBudget:5293.17, monthOverrides:{}, notes:'Gross ~$83k p.a.' },
+  { id:'scarlett-income', name:"Scarlett (post-tax)",            section:'income',   defaultBudget:5483.83, monthOverrides:{}, notes:'Gross ~$92k p.a.' },
+  // HOUSING & FIXED
+  { id:'mortgage',        name:"Mortgage",                       section:'housing',  defaultBudget:4372.03, monthOverrides:{}, notes:'$730k @ 5.99% / 30yr' },
+  { id:'council-rates',   name:"Council Rates",                  section:'housing',  defaultBudget:108.33,  monthOverrides:{}, notes:'Annual $1,300' },
+  { id:'body-corp',       name:"Body Corporate",                 section:'housing',  defaultBudget:83.33,   monthOverrides:{}, notes:'Annual $1,000' },
+  { id:'utilities',       name:"Utilities",                      section:'housing',  defaultBudget:300,     monthOverrides:{}, notes:'Electricity, gas, water' },
+  { id:'phone-internet',  name:"Telephone & Internet",           section:'housing',  defaultBudget:105,     monthOverrides:{}, notes:'Mobile $40 | Internet/Streaming $65' },
+  { id:'insurance',       name:"Insurance",                      section:'housing',  defaultBudget:150,     monthOverrides:{}, notes:'Home + contents' },
+  // PERSONAL
+  { id:'darren-allow',    name:"Darren ($200/fn)",               section:'personal', defaultBudget:433.33,  monthOverrides:{}, notes:'$200/fn × 26 ÷ 12' },
+  { id:'scarlett-allow',  name:"Scarlett ($200/fn)",             section:'personal', defaultBudget:433.33,  monthOverrides:{}, notes:'$200/fn × 26 ÷ 12' },
+  // VARIABLE
+  { id:'groceries',       name:"Groceries",                      section:'variable', defaultBudget:400,     monthOverrides:{}, notes:'' },
+  { id:'medical',         name:"Medical",                        section:'variable', defaultBudget:50,      monthOverrides:{}, notes:'' },
+  { id:'transport',       name:"Transport",                      section:'variable', defaultBudget:434,     monthOverrides:{}, notes:'Petrol $108 | Rego ~$78 | Maint $25 | PT $223' },
+  { id:'recreation',      name:"Recreational & Entertainment",   section:'variable', defaultBudget:850,     monthOverrides:{}, notes:'Dining, travel, activities' },
+  { id:'personal-care',   name:"Personal Care",                  section:'variable', defaultBudget:300,     monthOverrides:{}, notes:'Clothing $200 | Personal care $100' },
+  { id:'skiing',          name:"Skiing",                         section:'variable', defaultBudget:0,       monthOverrides:{'Jul 26':1000,'Aug 26':1000}, notes:'Jul/Aug $1,000 each' },
+  { id:'gifts',           name:"Gifts",                          section:'variable', defaultBudget:0,       monthOverrides:{'Dec 26':500}, notes:'Dec $500' },
+  { id:'misc',            name:"Misc",                           section:'variable', defaultBudget:150,     monthOverrides:{}, notes:'' },
+];
+
+/**
+ * Savings weeks from "Savings Tracker" sheet.
+ * Starting balances: Darren $35,445.25 · Scarlett $49,000
+ */
+const DEFAULT_SAVINGS_WEEKS = [
+  { id:1, week:'Wk 1', dates:'23 Apr – 29 Apr', event:'',          darrenIn:0,    scarlettIn:0,    expenseItem:'',                                              costOut:0 },
+  { id:2, week:'Wk 2', dates:'30 Apr – 6 May',  event:'',          darrenIn:0,    scarlettIn:0,    expenseItem:'',                                              costOut:0 },
+  { id:3, week:'Wk 3', dates:'7 May – 13 May',  event:'PAYDAY',    darrenIn:2200, scarlettIn:2500, expenseItem:'',                                              costOut:0 },
+  { id:4, week:'Wk 4', dates:'14 May – 20 May', event:'SETTLEMENT',darrenIn:0,    scarlettIn:0,    expenseItem:'Settlement — stamp duty, legal, loan top-up',  costOut:78496 },
+  { id:5, week:'Wk 5', dates:'21 May – 21 May', event:'PAYDAY',    darrenIn:2200, scarlettIn:2500, expenseItem:'',                                              costOut:0 },
+];
+
+// ============================================================
+// STATE — the live working object
+// ============================================================
+let state = {};
+
+// Track current UI state
+let currentTab   = 'dashboard';
+let currentMonth = 'May 26'; // default month for budget view
+let nextId       = 100;
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  loadState();
+  populateCatFilter();
+  renderAll();
+  setupMonthTabs();
+}
+
+function loadState() {
+  const saved = localStorage.getItem('homefinance_v1');
+  if (saved) {
+    try {
+      state = JSON.parse(saved);
+      // Ensure any new fields exist (for upgrades)
+      state.movingItems   = state.movingItems   || cloneItems();
+      state.categories    = state.categories    || JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
+      state.actuals       = state.actuals       || {};
+      state.savings       = state.savings       || defaultSavings();
+      state.savingsWeeks  = state.savingsWeeks  || JSON.parse(JSON.stringify(DEFAULT_SAVINGS_WEEKS));
+      state.movingCash    = state.movingCash    !== undefined ? state.movingCash : 15349.25;
+      nextId = state.nextId || 100;
+    } catch(e) {
+      console.warn('Failed to parse saved state, using defaults');
+      state = defaultState();
+    }
+  } else {
+    state = defaultState();
+  }
+}
+
+function defaultState() {
+  return {
+    movingItems:  cloneItems(),
+    categories:   JSON.parse(JSON.stringify(DEFAULT_CATEGORIES)),
+    actuals:      {},   // { 'May 26': { catId: value } }
+    savings:      defaultSavings(),
+    savingsWeeks: JSON.parse(JSON.stringify(DEFAULT_SAVINGS_WEEKS)),
+    movingCash:   15349.25,
+    nextId:       100,
+  };
+}
+
+function defaultSavings() {
+  return { darren: 35445.25, scarlett: 49000, settlement: 78496 };
+}
+
+function cloneItems() {
+  return JSON.parse(JSON.stringify(DEFAULT_MOVING));
+}
+
+function autoSave() {
+  state.nextId = nextId;
+  localStorage.setItem('homefinance_v1', JSON.stringify(state));
+}
+
+function saveData() {
+  autoSave();
+  showToast('✓ Saved to browser');
+}
+
+// ============================================================
+// EXPORT / IMPORT
+// ============================================================
+function exportData() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type:'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'home-finance-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  showToast('⬇ Exported!');
+}
+
+function importData() {
+  document.getElementById('importFile').click();
+}
+
+function handleImport(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      state = JSON.parse(ev.target.result);
+      autoSave();
+      renderAll();
+      showToast('⬆ Imported!');
+    } catch(err) {
+      alert('Import failed — invalid JSON file.');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+// ============================================================
+// NAV / TABS
+// ============================================================
+const TAB_TITLES = {
+  dashboard: 'Dashboard',
+  moving:    'Moving In',
+  budget:    'Annual Budget',
+  savings:   'Savings Tracker',
+};
+
+function showTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.querySelector(`.nav-link[onclick="showTab('${tab}')"]`).classList.add('active');
+  document.getElementById('topbarTitle').textContent = TAB_TITLES[tab];
+  closeSidebar();
+
+  // Render on demand
+  if (tab === 'dashboard') renderDashboard();
+  if (tab === 'moving')    { renderMovingSumBar(); renderMoving(); }
+  if (tab === 'budget')    renderBudget();
+  if (tab === 'savings')   renderSavings();
+}
+
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('mobOverlay').classList.add('open');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('mobOverlay').classList.remove('open');
+}
+
+// ============================================================
+// UTILITY
+// ============================================================
+function fmt(n) {
+  if (n === null || n === undefined || isNaN(n)) return '—';
+  return '$' + Math.abs(n).toLocaleString('en-AU', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+function fmtNoSym(n) {
+  if (n === null || n === undefined || isNaN(n)) return '';
+  return n.toLocaleString('en-AU', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+function pct(val, total) {
+  if (!total) return 0;
+  return Math.min(100, Math.round(val / total * 100));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ============================================================
+// BUDGET HELPERS
+// ============================================================
+function getBudget(cat, month) {
+  if (cat.monthOverrides && cat.monthOverrides[month] !== undefined) {
+    return cat.monthOverrides[month];
+  }
+  return cat.defaultBudget || 0;
+}
+
+function getActual(catId, month) {
+  return (state.actuals[month] && state.actuals[month][catId] != null)
+    ? parseFloat(state.actuals[month][catId])
+    : null;
+}
+
+function setActual(catId, month, val) {
+  if (!state.actuals[month]) state.actuals[month] = {};
+  state.actuals[month][catId] = isNaN(val) ? null : val;
+  autoSave();
+}
+
+function annualBudget(cat) {
+  return MONTHS.reduce((s, m) => s + getBudget(cat, m), 0);
+}
+
+function annualActual(catId) {
+  return MONTHS.reduce((s, m) => {
+    const v = getActual(catId, m);
+    return s + (v !== null ? v : 0);
+  }, 0);
+}
+
+// ============================================================
+// MOVING IN TOTALS
+// ============================================================
+function movingTotals() {
+  const items = state.movingItems;
+  const notBought = items.filter(i => i.status !== 'bought' && i.status !== 'not-needed');
+  const essential = notBought.filter(i => i.priority === 'essential');
+  const optional  = notBought.filter(i => i.priority === 'optional');
+  const cost = i => i.actual || i.est || 0;
+
+  return {
+    essentialTotal: essential.reduce((s,i) => s + cost(i), 0),
+    optionalTotal:  optional.reduce((s,i) => s + cost(i), 0),
+    grandTotal:     notBought.reduce((s,i) => s + cost(i), 0),
+    boughtCount:    items.filter(i => i.status === 'bought').length,
+    pendingCount:   items.filter(i => i.status === 'pending').length,
+    totalCount:     items.length,
+    stillToBuy:     notBought,
+  };
+}
+
+// ============================================================
+// RENDER ALL
+// ============================================================
+function renderAll() {
+  renderDashboard();
+  renderMovingSumBar();
+  renderMoving();
+  setupMonthTabs();
+  renderBudget();
+  renderSavings();
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function renderDashboard() {
+  const mt = movingTotals();
+
+  // Income & expense annual totals
+  const incomeCats  = state.categories.filter(c => c.section === 'income');
+  const expenseCats = state.categories.filter(c => c.section !== 'income');
+  const annIncome   = incomeCats.reduce((s,c) => s + annualBudget(c), 0);
+  const annExpense  = expenseCats.reduce((s,c) => s + annualBudget(c), 0);
+  const annSurplus  = annIncome - annExpense;
+
+  // Actuals for current year
+  const totalActualIncome  = incomeCats.reduce((s,c) => s + annualActual(c.id), 0);
+  const totalActualExpense = expenseCats.reduce((s,c) => s + annualActual(c.id), 0);
+
+  // Savings progress
+  const sav     = state.savings;
+  const combined = (sav.darren || 0) + (sav.scarlett || 0);
+  const savPct   = pct(combined, sav.settlement);
+
+  // Stat cards
+  document.getElementById('dash-stats').innerHTML = `
+    <div class="stat">
+      <div class="stat-lbl">Moving In Total</div>
+      <div class="stat-val">${fmt(mt.grandTotal)}</div>
+      <div class="stat-note">${fmt(mt.essentialTotal)} essential · ${fmt(mt.optionalTotal)} optional</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl">Items Remaining</div>
+      <div class="stat-val c-accent">${mt.pendingCount + (mt.stillToBuy.filter(i=>i.status==='planned').length)}</div>
+      <div class="stat-note">${mt.boughtCount} of ${mt.totalCount} items bought</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl">Annual Budget Surplus</div>
+      <div class="stat-val ${annSurplus >= 0 ? 'c-ok' : 'c-bad'}">${fmt(annSurplus)}</div>
+      <div class="stat-note">Income ${fmt(annIncome)} · Expenses ${fmt(annExpense)}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl">Cash After Settlement</div>
+      <div class="stat-val c-accent">${fmt(state.movingCash)}</div>
+      <div class="stat-note">Available for furniture &amp; moving</div>
+    </div>
+  `;
+
+  // Moving In by room chart
+  const rooms = {};
+  state.movingItems.forEach(i => {
+    if (!rooms[i.cat]) rooms[i.cat] = { bought: 0, pending: 0, cost: 0 };
+    if (i.status === 'bought') rooms[i.cat].bought++;
+    else if (i.status !== 'not-needed') rooms[i.cat].pending++;
+    rooms[i.cat].cost += (i.actual || i.est || 0);
+  });
+
+  const roomNames = Object.keys(rooms);
+  const maxCost   = Math.max(...roomNames.map(r => rooms[r].cost), 1);
+
+  let chartHtml = `<div class="chart-area">`;
+  roomNames.forEach(r => {
+    const h = Math.round((rooms[r].cost / maxCost) * 100);
+    chartHtml += `
+      <div class="chart-col">
+        <div class="chart-bars">
+          <div class="chart-b pb-blue" style="height:${h}%;" title="${r}: ${fmt(rooms[r].cost)}"></div>
+        </div>
+        <div class="chart-lbl">${r.replace('Living room','Living').replace('Bedroom 1','Bed1').replace('Outdoor / Other','Outdoor')}</div>
+      </div>`;
+  });
+  chartHtml += `</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:8px;">Bar height = total cost per room</div>`;
+  document.getElementById('dash-moving-chart').innerHTML = chartHtml;
+
+  // Items remaining badge
+  document.getElementById('dash-items-remaining').textContent = mt.pendingCount + ' essential to buy';
+
+  // Budget overview
+  const sections = [
+    { label:'Income',     cats: incomeCats,  color:'pb-green' },
+    { label:'Housing',    cats: state.categories.filter(c=>c.section==='housing'),  color:'pb-blue' },
+    { label:'Personal',   cats: state.categories.filter(c=>c.section==='personal'), color:'pb-gold' },
+    { label:'Variable',   cats: state.categories.filter(c=>c.section==='variable'), color:'pb-red'  },
+  ];
+
+  let budHtml = '';
+  sections.forEach(s => {
+    const bgt = s.cats.reduce((t,c) => t + annualBudget(c), 0);
+    budHtml += `
+      <div class="flex-between mb-8">
+        <span style="font-size:12px;">${s.label}</span>
+        <span class="fmono" style="font-size:12px;">${fmt(bgt)}/yr</span>
+      </div>`;
+  });
+  budHtml += `<hr style="margin:12px 0;border:none;border-top:1px solid var(--border);">
+    <div class="flex-between">
+      <span style="font-size:13px;font-weight:600;">Annual Net</span>
+      <span class="fmono" style="font-size:14px;font-weight:700;color:${annSurplus>=0?'var(--ok)':'var(--bad)'};">${fmt(annSurplus)}</span>
+    </div>`;
+  document.getElementById('dash-budget-overview').innerHTML = budHtml;
+
+  // Still to buy
+  const pending = state.movingItems.filter(i => i.status === 'pending');
+  let toBuyHtml = '';
+  if (!pending.length) {
+    toBuyHtml = '<div class="alert alert-ok">🎉 All essential items are sorted!</div>';
+  } else {
+    pending.slice(0, 10).forEach(i => {
+      toBuyHtml += `
+        <div class="flex-between" style="padding:6px 0;border-bottom:1px solid var(--border);">
+          <div>
+            <div style="font-size:13px;font-weight:500;">${i.item}</div>
+            <div style="font-size:11px;color:var(--muted);">${i.cat}</div>
+          </div>
+          <span class="fmono" style="font-size:13px;">${fmt(i.actual || i.est)}</span>
+        </div>`;
+    });
+    if (pending.length > 10) {
+      toBuyHtml += `<div style="font-size:12px;color:var(--muted);margin-top:8px;">+ ${pending.length - 10} more</div>`;
+    }
+    toBuyHtml += `<div class="flex-between mt-12" style="font-weight:700;">
+      <span>Essential Total</span>
+      <span class="fmono" style="color:var(--primary);">${fmt(mt.essentialTotal)}</span>
+    </div>`;
+  }
+  document.getElementById('dash-to-buy').innerHTML = toBuyHtml;
+
+  // Budget alerts
+  let alertsHtml = '';
+  const overspend = [];
+  state.categories.filter(c => c.section !== 'income').forEach(c => {
+    MONTHS.forEach(m => {
+      const bgt = getBudget(c, m);
+      const act = getActual(c.id, m);
+      if (act !== null && bgt > 0 && act > bgt) {
+        overspend.push({ name: c.name, month: m, budget: bgt, actual: act, over: act - bgt });
+      }
+    });
+  });
+
+  if (!overspend.length) {
+    alertsHtml = '<div class="alert alert-ok">✓ No overspending recorded yet.</div>';
+  } else {
+    overspend.slice(0,8).forEach(o => {
+      alertsHtml += `
+        <div class="alert alert-bad" style="margin-bottom:8px;">
+          <strong>${o.name}</strong> — ${o.month}<br>
+          Budget ${fmt(o.budget)} · Actual ${fmt(o.actual)} · <strong>Over by ${fmt(o.over)}</strong>
+        </div>`;
+    });
+  }
+
+  // Savings progress in alerts area
+  alertsHtml += `
+    <div style="margin-top:12px;">
+      <div class="flex-between mb-8">
+        <span style="font-size:13px;font-weight:600;">Savings Progress</span>
+        <span class="fmono">${fmt(combined)} / ${fmt(sav.settlement)}</span>
+      </div>
+      <div class="pbar-wrap">
+        <div class="pbar ${savPct >= 100 ? 'pb-green' : 'pb-gold'}" style="width:${savPct}%"></div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">${savPct}% of settlement ${fmt(sav.settlement)} saved</div>
+    </div>`;
+
+  document.getElementById('dash-alerts').innerHTML = alertsHtml;
+}
+
+// ============================================================
+// MOVING IN
+// ============================================================
+function populateCatFilter() {
+  const cats = [...new Set(DEFAULT_MOVING.map(i => i.cat))];
+  const sel  = document.getElementById('mov-cat');
+  cats.forEach(c => {
+    const o = document.createElement('option');
+    o.value = c; o.textContent = c;
+    sel.appendChild(o);
+  });
+}
+
+function renderMovingSumBar() {
+  const mt = movingTotals();
+  const cash = state.movingCash || 0;
+  const remaining = cash - mt.essentialTotal;
+
+  document.getElementById('moving-sumbar').innerHTML = `
+    <div class="sum-item">
+      <span class="sum-lbl">Essential Total</span>
+      <span class="sum-val">${fmt(mt.essentialTotal)}</span>
+    </div>
+    <div class="sum-div"></div>
+    <div class="sum-item">
+      <span class="sum-lbl">Optional Total</span>
+      <span class="sum-val">${fmt(mt.optionalTotal)}</span>
+    </div>
+    <div class="sum-div"></div>
+    <div class="sum-item">
+      <span class="sum-lbl">Grand Total</span>
+      <span class="sum-val">${fmt(mt.grandTotal)}</span>
+    </div>
+    <div class="sum-div"></div>
+    <div class="sum-item">
+      <span class="sum-lbl">Cash Balance</span>
+      <span class="sum-val">${fmt(cash)}</span>
+    </div>
+    <div class="sum-div"></div>
+    <div class="sum-item">
+      <span class="sum-lbl">Remaining After Essential</span>
+      <span class="sum-val" style="color:${remaining>=0?'#a7f3d0':'#fca5a5'};">${fmt(remaining)}</span>
+    </div>
+    <div class="sum-div"></div>
+    <div class="sum-item">
+      <span class="sum-lbl">Bought</span>
+      <span class="sum-val">${mt.boughtCount} / ${mt.totalCount}</span>
+    </div>
+  `;
+
+  // Update cash input
+  const inp = document.getElementById('cash-balance');
+  if (document.activeElement !== inp) {
+    inp.value = cash;
+  }
+}
+
+function renderMoving() {
+  const search   = (document.getElementById('mov-search')?.value || '').toLowerCase();
+  const catFlt   = document.getElementById('mov-cat')?.value || '';
+  const statusFlt= document.getElementById('mov-status')?.value || '';
+  const prioFlt  = document.getElementById('mov-priority')?.value || '';
+
+  let items = state.movingItems.filter(i => {
+    if (catFlt    && i.cat      !== catFlt)    return false;
+    if (statusFlt && i.status   !== statusFlt) return false;
+    if (prioFlt   && i.priority !== prioFlt)   return false;
+    if (search) {
+      const hay = (i.item + i.brand + i.model + i.notes + i.cat).toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  });
+
+  const SBADGE = {
+    'bought':     '<span class="badge b-bought">Bought</span>',
+    'pending':    '<span class="badge b-pending">Pending</span>',
+    'planned':    '<span class="badge b-planned">Planned</span>',
+    'not-needed': '<span class="badge b-notneeded">Not Needed</span>',
+  };
+
+  const PBADGE = {
+    'essential': '<span class="badge b-essential">Essential</span>',
+    'optional':  '<span class="badge b-optional">Optional</span>',
+  };
+
+  let html = '';
+  items.forEach(item => {
+    const brandModel = [item.brand, item.model].filter(Boolean).join(' — ');
+    const linkHtml   = item.link ? `<a href="${item.link}" target="_blank" style="font-size:11px;color:var(--accent);">🔗 Link</a>` : '';
+    html += `
+      <tr id="row-${item.id}">
+        <td style="font-size:12px;color:var(--muted);">${item.cat}</td>
+        <td style="font-weight:500;">${item.item}</td>
+        <td style="font-size:12px;color:var(--muted);">${brandModel} ${linkHtml}</td>
+        <td class="r">${item.est ? fmt(item.est) : '<span style="color:var(--muted)">—</span>'}</td>
+        <td class="r">${item.actual !== null && item.actual !== undefined ? fmt(item.actual) : '<span style="color:var(--muted)">—</span>'}</td>
+        <td>
+          <select class="cell-select" onchange="updateItemField(${item.id},'status',this.value)">
+            <option value="pending"    ${item.status==='pending'   ?'selected':''}>Pending</option>
+            <option value="bought"     ${item.status==='bought'    ?'selected':''}>Bought</option>
+            <option value="planned"    ${item.status==='planned'   ?'selected':''}>Planned</option>
+            <option value="not-needed" ${item.status==='not-needed'?'selected':''}>Not Needed</option>
+          </select>
+        </td>
+        <td>
+          <select class="cell-select" onchange="updateItemField(${item.id},'priority',this.value)">
+            <option value="essential" ${item.priority==='essential'?'selected':''}>Essential</option>
+            <option value="optional"  ${item.priority==='optional' ?'selected':''}>Optional</option>
+          </select>
+        </td>
+        <td><input type="date" class="cell-edit" style="width:120px;text-align:left;" value="${item.date||''}" onchange="updateItemField(${item.id},'date',this.value)"></td>
+        <td class="mob-hide" style="font-size:12px;color:var(--muted);max-width:180px;">${item.notes||''}</td>
+        <td>
+          <div class="flex gap-8">
+            <button class="btn btn-ghost btn-xs" onclick="editItem(${item.id})">✏</button>
+            <button class="btn btn-danger btn-xs" onclick="deleteItem(${item.id})">✕</button>
+          </div>
+        </td>
+      </tr>`;
+  });
+
+  if (!items.length) {
+    html = `<tr><td colspan="10" style="text-align:center;padding:24px;color:var(--muted);">No items match your filters.</td></tr>`;
+  }
+
+  document.getElementById('moving-tbody').innerHTML = html;
+  renderMovingSumBar();
+}
+
+function updateItemField(id, field, value) {
+  const item = state.movingItems.find(i => i.id === id);
+  if (item) {
+    item[field] = value;
+    autoSave();
+    renderMovingSumBar();
+    if (currentTab === 'dashboard') renderDashboard();
+  }
+}
+
+function deleteItem(id) {
+  if (!confirm('Delete this item?')) return;
+  state.movingItems = state.movingItems.filter(i => i.id !== id);
+  autoSave();
+  renderMoving();
+  renderMovingSumBar();
+}
+
+function openAddItem() {
+  clearItemForm();
+  document.getElementById('itemModalTitle').textContent = 'Add Item';
+  document.getElementById('item-id').value = '';
+  openModal('itemModal');
+}
+
+function editItem(id) {
+  const item = state.movingItems.find(i => i.id === id);
+  if (!item) return;
+  document.getElementById('itemModalTitle').textContent = 'Edit Item';
+  document.getElementById('item-id').value    = id;
+  document.getElementById('item-cat').value   = item.cat;
+  document.getElementById('item-name').value  = item.item;
+  document.getElementById('item-brand').value = item.brand || '';
+  document.getElementById('item-model').value = item.model || '';
+  document.getElementById('item-est').value   = item.est || '';
+  document.getElementById('item-actual').value= item.actual !== null && item.actual !== undefined ? item.actual : '';
+  document.getElementById('item-status').value  = item.status;
+  document.getElementById('item-priority').value= item.priority;
+  document.getElementById('item-date').value  = item.date || '';
+  document.getElementById('item-link').value  = item.link || '';
+  document.getElementById('item-notes').value = item.notes || '';
+  openModal('itemModal');
+}
+
+function clearItemForm() {
+  ['item-name','item-brand','item-model','item-est','item-actual','item-date','item-link','item-notes'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('item-cat').value    = 'Appliances';
+  document.getElementById('item-status').value = 'pending';
+  document.getElementById('item-priority').value = 'essential';
+}
+
+function saveItem() {
+  const id     = document.getElementById('item-id').value;
+  const name   = document.getElementById('item-name').value.trim();
+  if (!name) { alert('Item name is required.'); return; }
+
+  const data = {
+    cat:      document.getElementById('item-cat').value,
+    item:     name,
+    brand:    document.getElementById('item-brand').value.trim(),
+    model:    document.getElementById('item-model').value.trim(),
+    est:      parseFloat(document.getElementById('item-est').value) || null,
+    actual:   parseFloat(document.getElementById('item-actual').value) || null,
+    status:   document.getElementById('item-status').value,
+    priority: document.getElementById('item-priority').value,
+    date:     document.getElementById('item-date').value,
+    link:     document.getElementById('item-link').value.trim(),
+    notes:    document.getElementById('item-notes').value.trim(),
+  };
+
+  if (id) {
+    const item = state.movingItems.find(i => i.id === parseInt(id));
+    if (item) Object.assign(item, data);
+  } else {
+    data.id = nextId++;
+    state.movingItems.push(data);
+  }
+
+  autoSave();
+  closeModal('itemModal');
+  renderMoving();
+  renderMovingSumBar();
+}
+
+// ============================================================
+// BUDGET
+// ============================================================
+function setupMonthTabs() {
+  const tabs = document.getElementById('monthTabs');
+  if (!tabs) return;
+  tabs.innerHTML = '';
+
+  // "Annual" tab first
+  const ann = document.createElement('div');
+  ann.className = 'm-tab' + (currentMonth === 'Annual' ? ' active' : '');
+  ann.textContent = 'Annual';
+  ann.onclick = () => selectMonth('Annual');
+  tabs.appendChild(ann);
+
+  MONTHS.forEach(m => {
+    const d = document.createElement('div');
+    d.className = 'm-tab' + (currentMonth === m ? ' active' : '');
+    d.textContent = m;
+    d.onclick = () => selectMonth(m);
+    tabs.appendChild(d);
+  });
+}
+
+function selectMonth(m) {
+  currentMonth = m;
+  document.querySelectorAll('.m-tab').forEach(t => {
+    t.classList.toggle('active', t.textContent === m);
+  });
+  renderBudgetTable();
+}
+
+function renderBudget() {
+  renderBudgetStats();
+  renderBudgetTable();
+}
+
+function renderBudgetStats() {
+  const incomeCats  = state.categories.filter(c => c.section === 'income');
+  const expenseCats = state.categories.filter(c => c.section !== 'income');
+
+  const annIncome  = incomeCats.reduce((s,c) => s + annualBudget(c), 0);
+  const annExpense = expenseCats.reduce((s,c) => s + annualBudget(c), 0);
+  const annSurplus = annIncome - annExpense;
+  const actIncome  = incomeCats.reduce((s,c) => s + annualActual(c.id), 0);
+  const actExpense = expenseCats.reduce((s,c) => s + annualActual(c.id), 0);
+  const actSurplus = actIncome - actExpense;
+
+  document.getElementById('budget-stats').innerHTML = `
+    <div class="stat">
+      <div class="stat-lbl">Annual Budget Income</div>
+      <div class="stat-val c-ok">${fmt(annIncome)}</div>
+      <div class="stat-note">Darren + Scarlett</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl">Annual Budget Expenses</div>
+      <div class="stat-val c-bad">${fmt(annExpense)}</div>
+      <div class="stat-note">All categories</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl">Budget Surplus</div>
+      <div class="stat-val ${annSurplus>=0?'c-ok':'c-bad'}">${fmt(annSurplus)}</div>
+      <div class="stat-note">Per annum budgeted</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl">Actual Surplus (YTD)</div>
+      <div class="stat-val ${actSurplus>=0?'c-ok':'c-bad'}">${actIncome > 0 || actExpense > 0 ? fmt(actSurplus) : '—'}</div>
+      <div class="stat-note">Recorded actuals only</div>
+    </div>
+  `;
+}
+
+function renderBudgetTable() {
+  const isAnnual = (currentMonth === 'Annual');
+  document.getElementById('budgetTableTitle').textContent =
+    isAnnual ? 'Annual Summary — May 2026 to May 2027' : `${currentMonth} — Budget vs Actuals`;
+
+  const SECTIONS = [
+    { key:'income',   label:'Income' },
+    { key:'housing',  label:'Housing & Fixed Costs' },
+    { key:'personal', label:'Personal Allowances' },
+    { key:'variable', label:'Variable Expenses' },
+  ];
+
+  let totalBudgetIn = 0, totalBudgetOut = 0;
+  let totalActualIn = 0, totalActualOut = 0;
+
+  let html = '';
+
+  SECTIONS.forEach(sec => {
+    const cats = state.categories.filter(c => c.section === sec.key);
+    if (!cats.length) return;
+
+    html += `<tr class="row-section"><td colspan="5">${sec.label}</td></tr>`;
+
+    let secBudget = 0, secActual = 0;
+
+    cats.forEach(cat => {
+      const budget = isAnnual ? annualBudget(cat) : getBudget(cat, currentMonth);
+      const actual = isAnnual ? annualActual(cat.id) : (getActual(cat.id, currentMonth) ?? null);
+      const actualVal = actual !== null ? actual : 0;
+      const variance  = actual !== null ? (sec.key === 'income' ? actual - budget : budget - actual) : null;
+      const isOver    = variance !== null && variance < 0 && sec.key !== 'income' && budget > 0;
+
+      secBudget += budget;
+      secActual += actualVal;
+
+      const varStr = variance !== null
+        ? `<span style="color:${variance >= 0 ? 'var(--ok)' : 'var(--bad)'};">${variance >= 0 ? '+' : ''}${fmt(Math.abs(variance))}</span>`
+        : '<span style="color:var(--muted);">—</span>';
+
+      const annBgt = annualBudget(cat);
+
+      html += `
+        <tr class="${isOver ? 'row-over' : ''}">
+          <td>
+            <span>${cat.name}</span>
+            ${cat.notes ? `<span style="display:block;font-size:10px;color:var(--muted);">${cat.notes}</span>` : ''}
+          </td>
+          <td class="r">${fmt(budget)}</td>
+          <td class="r">
+            ${isAnnual
+              ? (actualVal > 0 ? fmt(actualVal) : '<span style="color:var(--muted);">—</span>')
+              : `<input class="cell-edit" type="number" step="0.01" style="width:90px;"
+                  value="${actual !== null ? actual : ''}"
+                  placeholder="0.00"
+                  onchange="setActual('${cat.id}','${currentMonth}',parseFloat(this.value));renderBudget();"
+                  oninput="setActual('${cat.id}','${currentMonth}',parseFloat(this.value)||null);renderBudgetStats();">`
+            }
+          </td>
+          <td class="r">${isAnnual && actualVal === 0 ? '<span style="color:var(--muted)">—</span>' : varStr}</td>
+          <td class="r mob-hide"><span class="fmono" style="font-size:12px;color:var(--muted);">${fmt(annBgt)}</span></td>
+        </tr>`;
+    });
+
+    const secActualReal = cats.reduce((s,c) => {
+      const v = isAnnual ? annualActual(c.id) : (getActual(c.id, currentMonth) ?? 0);
+      return s + v;
+    }, 0);
+
+    html += `
+      <tr class="row-sub">
+        <td>${sec.label} Subtotal</td>
+        <td class="r">${fmt(secBudget)}</td>
+        <td class="r">${secActualReal > 0 ? fmt(secActualReal) : '—'}</td>
+        <td class="r">${secActualReal > 0 ? fmt(Math.abs(secBudget - secActualReal)) : '—'}</td>
+        <td class="r mob-hide"></td>
+      </tr>`;
+
+    if (sec.key === 'income') {
+      totalBudgetIn += secBudget;
+      totalActualIn += secActual;
+    } else {
+      totalBudgetOut += secBudget;
+      totalActualOut += secActual;
+    }
+  });
+
+  // Total outgoings
+  html += `
+    <tr class="row-total">
+      <td>Total Outgoings</td>
+      <td class="r">${fmt(totalBudgetOut)}</td>
+      <td class="r">${totalActualOut > 0 ? fmt(totalActualOut) : '—'}</td>
+      <td class="r"></td>
+      <td class="r mob-hide"></td>
+    </tr>`;
+
+  // Net surplus
+  const netBudget = totalBudgetIn - totalBudgetOut;
+  const netActual = totalActualIn - totalActualOut;
+  html += `
+    <tr class="row-net">
+      <td>Net Surplus / (Deficit)</td>
+      <td class="r">${fmt(netBudget)}</td>
+      <td class="r">${totalActualIn > 0 || totalActualOut > 0 ? fmt(netActual) : '—'}</td>
+      <td class="r"></td>
+      <td class="r mob-hide"></td>
+    </tr>`;
+
+  document.getElementById('budget-tbody').innerHTML = html;
+}
+
+function openAddCategory() {
+  document.getElementById('cat-name').value   = '';
+  document.getElementById('cat-section').value= 'variable';
+  document.getElementById('cat-amount').value = '';
+  openModal('catModal');
+}
+
+function saveCategory() {
+  const name   = document.getElementById('cat-name').value.trim();
+  const section= document.getElementById('cat-section').value;
+  const amount = parseFloat(document.getElementById('cat-amount').value) || 0;
+
+  if (!name) { alert('Category name is required.'); return; }
+
+  const id = 'custom-' + Date.now();
+  state.categories.push({
+    id, name, section,
+    defaultBudget: amount,
+    monthOverrides: {},
+    notes: '',
+  });
+
+  autoSave();
+  closeModal('catModal');
+  renderBudget();
+  showToast('Category added');
+}
+
+// ============================================================
+// SAVINGS
+// ============================================================
+function renderSavings() {
+  const sav  = state.savings;
+  const darren   = sav.darren   || 0;
+  const scarlett = sav.scarlett || 0;
+  const combined = darren + scarlett;
+  const settle   = sav.settlement || 78496;
+  const savPct   = pct(combined, settle);
+
+  // Update inputs (without clobbering focus)
+  const dinp = document.getElementById('sav-darren');
+  if (document.activeElement !== dinp) dinp.value = darren;
+  const sinp = document.getElementById('sav-scarlett');
+  if (document.activeElement !== sinp) sinp.value = scarlett;
+  const setp = document.getElementById('sav-settlement');
+  if (document.activeElement !== setp) setp.value = settle;
+
+  document.getElementById('sav-combined').textContent = '$' + combined.toLocaleString('en-AU', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+  // Progress
+  const surplus = combined - settle;
+  document.getElementById('sav-progress').innerHTML = `
+    <div class="flex-between mb-8">
+      <span style="font-size:14px;font-weight:600;">Savings vs Settlement Required</span>
+      <span class="fmono" style="font-size:14px;">${fmt(combined)} / ${fmt(settle)}</span>
+    </div>
+    <div class="pbar-wrap" style="height:14px;">
+      <div class="pbar ${savPct>=100?'pb-green':'pb-gold'}" style="width:${savPct}%;height:14px;"></div>
+    </div>
+    <div class="flex-between mt-8">
+      <span style="font-size:12px;color:var(--muted);">${savPct}% saved</span>
+      <span class="fmono" style="font-size:13px;color:${surplus>=0?'var(--ok)':'var(--bad)'};">
+        ${surplus >= 0 ? '✓ Surplus ' : '⚠ Shortfall '} ${fmt(Math.abs(surplus))}
+      </span>
+    </div>
+  `;
+
+  // Weekly table
+  const weeks = state.savingsWeeks;
+  let running = combined;
+  // Reset running total from initial balance
+  const initialBalance = combined; // current balance = starting point
+
+  // Compute running totals forward from week 1
+  // We use starting balances separately; running shows cumulative balance
+  let runningBal = (darren + scarlett); // we show running starting from current combined
+
+  // Actually: recalculate running total week by week based on initial (wk1 start) + changes
+  // The tracker starts from Apr 23 opening balances, then adds/deducts each week.
+  // For simplicity, we start from the current combined balance at Wk 1 start
+  // and compute forward — this matches the spreadsheet's approach.
+
+  // Find initial opening (before Wk1) by working backwards through weeks
+  let openingBalance = darren + scarlett;
+  weeks.forEach(w => {
+    openingBalance -= (w.darrenIn || 0);
+    openingBalance -= (w.scarlettIn || 0);
+    openingBalance += (w.costOut || 0);
+  });
+  // openingBalance is now the "before Wk1" balance
+
+  let runBal = openingBalance;
+  let postSettleBal = null;
+  let finalBal      = null;
+
+  let wkHtml = '';
+  weeks.forEach((w, idx) => {
+    const totalIn = (w.darrenIn || 0) + (w.scarlettIn || 0);
+    runBal = runBal + totalIn - (w.costOut || 0);
+    const surplus = runBal - settle;
+
+    // Capture key balances
+    if (w.event === 'SETTLEMENT') postSettleBal = runBal;
+    if (idx === weeks.length - 1)  finalBal      = runBal;
+
+    const isSettle = w.event === 'SETTLEMENT';
+
+    wkHtml += `
+      <tr style="${isSettle ? 'background:#fff8f0;' : ''}">
+        <td>
+          <input class="cell-edit-wide" style="width:50px;" value="${w.week||''}"
+            onchange="updateWeek(${w.id},'week',this.value)">
+        </td>
+        <td>
+          <input class="cell-edit-wide" style="width:120px;" value="${w.dates||''}"
+            onchange="updateWeek(${w.id},'dates',this.value)">
+        </td>
+        <td>
+          <input class="cell-edit-wide" style="width:100px;font-weight:${isSettle?'700':'400'};color:${isSettle?'var(--accent)':'inherit'};"
+            value="${w.event||''}" onchange="updateWeek(${w.id},'event',this.value)">
+        </td>
+        <td class="r">
+          <input class="cell-edit" type="number" step="0.01" value="${w.darrenIn||''}"
+            onchange="updateWeek(${w.id},'darrenIn',parseFloat(this.value)||0);renderSavings()">
+        </td>
+        <td class="r">
+          <input class="cell-edit" type="number" step="0.01" value="${w.scarlettIn||''}"
+            onchange="updateWeek(${w.id},'scarlettIn',parseFloat(this.value)||0);renderSavings()">
+        </td>
+        <td class="r fmono">${totalIn > 0 ? fmt(totalIn) : '—'}</td>
+        <td>
+          <input class="cell-edit-wide" style="width:160px;" value="${w.expenseItem||''}"
+            onchange="updateWeek(${w.id},'expenseItem',this.value)">
+        </td>
+        <td class="r">
+          <input class="cell-edit" type="number" step="0.01" value="${w.costOut||''}"
+            onchange="updateWeek(${w.id},'costOut',parseFloat(this.value)||0);renderSavings()"
+            style="${w.costOut > 0 ? 'color:var(--bad);' : ''}">
+        </td>
+        <td class="r fmono">${fmt(runBal)}</td>
+        <td class="r fmono" style="color:${surplus>=0?'var(--ok)':'var(--bad)'};">${fmt(surplus)}</td>
+        <td>
+          <button class="btn btn-danger btn-xs" onclick="deleteWeek(${w.id})">✕</button>
+        </td>
+      </tr>`;
+  });
+
+  document.getElementById('savings-tbody').innerHTML = wkHtml;
+
+  // Final balance callouts
+  document.getElementById('sav-post-settle').textContent = postSettleBal !== null ? fmt(postSettleBal) : fmt(runBal - (weeks[weeks.length-1]?.costOut||0) - (weeks[weeks.length-1]?.darrenIn||0) - (weeks[weeks.length-1]?.scarlettIn||0));
+  document.getElementById('sav-final').textContent = finalBal !== null ? fmt(finalBal) : fmt(runBal);
+}
+
+function updateWeek(id, field, value) {
+  const week = state.savingsWeeks.find(w => w.id === id);
+  if (week) {
+    week[field] = value;
+    autoSave();
+  }
+}
+
+function addSavingsRow() {
+  const last = state.savingsWeeks[state.savingsWeeks.length - 1];
+  const newId = nextId++;
+  state.savingsWeeks.push({
+    id: newId,
+    week: `Wk ${state.savingsWeeks.length + 1}`,
+    dates: '',
+    event: '',
+    darrenIn: 0,
+    scarlettIn: 0,
+    expenseItem: '',
+    costOut: 0,
+  });
+  autoSave();
+  renderSavings();
+}
+
+function deleteWeek(id) {
+  if (!confirm('Remove this week row?')) return;
+  state.savingsWeeks = state.savingsWeeks.filter(w => w.id !== id);
+  autoSave();
+  renderSavings();
+}
+
+// ============================================================
+// START
+// ============================================================
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
